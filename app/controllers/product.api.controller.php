@@ -1,16 +1,15 @@
 <?php
+require_once './app/controllers/api.controller.php';
 require_once './app/models/product.model.php';
-require_once './app/api/api.view.php';
 
-class ApiProductController {
-
+class ProductApiController extends ApiController {
     private $model;
-    private $view;
 
-    function __construct() {
-        $this->model = new productModel();
-        $this->view = new APIView();
-    }
+    public function __construct() {
+        parent::__construct();
+          $this->model = new productModel();
+       }
+   
 
     public function getAll($params = null) {
         $products = $this->model->getProducts();
@@ -39,5 +38,17 @@ class ApiProductController {
             $this->view->response("El producto con el id=$idProduct no existe", 404);
         } 
     
+    }
+
+    function create($params = null) {
+        $body = $this->getData();
+
+        $nombre = $body->nombre;
+        $precio = $body->precio;
+        $categoria = $body->categoria;
+
+        $id = $this->model->insertProduct($nombre, $precio, $categoria);
+
+        $this->view->response('La tarea fue insertada con el id='.$id, 201);
     }
 }

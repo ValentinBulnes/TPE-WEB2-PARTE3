@@ -1,14 +1,17 @@
 <?php
 require_once './libs/router.php';
-require_once './app/api/api-product.controller.php';
+require_once './app/controllers/product.api.controller.php';
+
 
 // creo el router
 $router = new Router();
 
 // defino la tabla de ruteo
-$router->addRoute('productos', 'GET', 'ApiProductController', 'getAll');
-$router->addRoute('productos/:ID', 'GET', 'ApiProductController', 'get');
-$router->addRoute('productos/:ID', 'DELETE', 'ApiProductController', 'delete');
+//                 endpoint  , verbo ,      controller      ,   metodo
+$router->addRoute('productos', 'GET', 'ProductApiController', 'getAll');
+$router->addRoute('productos/:ID', 'GET', 'ProductApiController', 'get');
+$router->addRoute('productos/:ID', 'DELETE', 'ProductApiController', 'delete');
+$router->addRoute('productos', 'POST', 'ProductApiController', 'create');
 
 // rutea
 $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);
