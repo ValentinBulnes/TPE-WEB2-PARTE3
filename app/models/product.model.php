@@ -1,12 +1,8 @@
 <?php
 require_once './app/models/config.php';
+require_once './app/models/model.php';
 
-class productModel {
-    private $db;
-
-    public function __construct() {
-        $this->db = new PDO("mysql:host=".MYSQL_HOST .";dbname=".MYSQL_DB.";charset=utf8", MYSQL_USER, MYSQL_PASS);
-    }
+class productModel extends Model {
 
     function getProducts() {
         $query = $this->db->prepare('SELECT productos.*, categorias.nombre AS categoria FROM productos JOIN categorias ON productos.id_categoria = categorias.id_categoria');

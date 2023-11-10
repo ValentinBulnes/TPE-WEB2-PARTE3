@@ -22,6 +22,7 @@ class ProductApiController extends ApiController {
         $idProduct = $params[':ID'];
         $product = $this->model->getProductByID($idProduct);
         if ($product)
+            
             $this->view->response($product, 200);
         else
             $this->view->response("El producto con el id=$idProduct no existe", 404);
