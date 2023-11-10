@@ -82,4 +82,15 @@ class ProductApiController extends ApiController {
             $this->view->response("Producto id=".$id_producto." not found", 404);
     }
 
+    public function getOfertasPorCategoria($params = null) {
+        $id_categoria = $params[':ID'];
+        $productos = $this->model->getProductosEnOfertaPorCategoria($id_categoria);
+        
+        if ($productos)
+            $this->view->response($productos, 200);
+        else
+            $this->view->response("No hay productos en oferta para la categoría con id=$id_categoria", 404);
+    }
+    
+
 }

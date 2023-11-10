@@ -41,11 +41,21 @@ class productModel extends Model {
     function deleteProduct($id_producto) {
         $query = $this->db->prepare('DELETE FROM productos WHERE id_producto = ?');
         $query->execute([$id_producto]);
+        
         return $query->rowCount();
     }
 
     function updateProduct($id_producto, $nombre, $precio, $categoria) {
         $query = $this->db->prepare('UPDATE productos SET nombre = ?, precio = ?, id_categoria = ? WHERE id_producto = ?');
+
         return $query->execute([$nombre, $precio, $categoria, $id_producto]);
     }
+
+    public function getProductosEnOfertaPorCategoria($id_categoria) {
+        $query = $this->db->prepare('SELECT * FROM productos WHERE oferta = true AND id_categoria = ?');
+        $query->execute([$id_categoria]);
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+    
 }
