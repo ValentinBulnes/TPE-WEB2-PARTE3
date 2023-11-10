@@ -40,7 +40,7 @@ class ProductApiController extends ApiController {
     
     }
 
-    function create($params = null) {
+    public function create($params = null) {
         $body = $this->getData();
 
         $nombre = $body->nombre;
@@ -51,4 +51,21 @@ class ProductApiController extends ApiController {
 
         $this->view->response('La tarea fue insertada con el id='.$id, 201);
     }
+
+    public function updateProduct($params = null) {
+        $id_producto = $params[':ID'];
+        $product = $this->model->getProductByID($id_producto);
+
+        if ($product) {
+            $body = $this->getData();
+            $nombre = $body->nombre;
+            $precio = $body->precio;
+            $categoria = $body->categoria;
+            $this->model->updateProduct($id_producto, $nombre, $precio, $categoria);
+            $this->view->response("Producto id=".$id_producto." actualizado con éxito", 200);
+        }
+        else 
+            $this->view->response("Producto id=".$id_producto." not found", 404);
+    }
+
 }
