@@ -43,26 +43,39 @@ class ProductApiController extends ApiController {
 
     public function create($params = null) {
         $body = $this->getData();
-
+    
+        if (!isset($body->nombre) || !isset($body->precio) || !isset($body->id_categoria)) {
+ 
+            $this->view->response('Datos enviados inválidos', 400);
+            return;
+        }
+    
         $nombre = $body->nombre;
         $precio = $body->precio;
-        $categoria = $body->categoria;
-
-        $id = $this->model->insertProduct($nombre, $precio, $categoria);
-
+        $id_categoria = $body->id_categoria;
+    
+        $id = $this->model->insertProduct($nombre, $precio, $id_categoria);
+    
         $this->view->response('La tarea fue insertada con el id='.$id, 201);
     }
-
+    
     public function updateProduct($params = null) {
         $id_producto = $params[':ID'];
         $product = $this->model->getProductByID($id_producto);
-
+    
         if ($product) {
             $body = $this->getData();
+    
+            if (!isset($body->nombre) || !isset($body->precio) || !isset($body->id_categoria)) {
+
+                $this->view->response('Datos enviados inválidos', 400);
+                return;
+            }
+    
             $nombre = $body->nombre;
             $precio = $body->precio;
-            $categoria = $body->categoria;
-            $this->model->updateProduct($id_producto, $nombre, $precio, $categoria);
+            $id_categoria = $body->id_categoria;
+            $this->model->updateProduct($id_producto, $nombre, $precio, $id_categoria);
             $this->view->response("Producto id=".$id_producto." actualizado con éxito", 200);
         }
         else 
