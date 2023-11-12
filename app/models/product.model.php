@@ -4,14 +4,15 @@ require_once './app/models/model.php';
 
 class productModel extends Model {
 
-    function getProducts() {
-        $query = $this->db->prepare('SELECT productos.*, categorias.nombre AS categoria FROM productos JOIN categorias ON productos.id_categoria = categorias.id_categoria');
+    function getProducts($orderBy, $orderDir) {
+        $query = $this->db->prepare("SELECT productos.*, categorias.nombre AS categoria FROM productos JOIN categorias ON productos.id_categoria = categorias.id_categoria ORDER BY $orderBy $orderDir");
         $query->execute();
     
         $products = $query->fetchAll(PDO::FETCH_OBJ);
     
         return $products;
     }
+    
     
     function getProductByID($id) {
         $query = $this->db->prepare('SELECT productos.*, categorias.nombre AS categoria FROM productos JOIN categorias ON productos.id_categoria = categorias.id_categoria WHERE productos.id_producto = ?');

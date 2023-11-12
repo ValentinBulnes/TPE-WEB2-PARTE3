@@ -11,10 +11,24 @@ class ProductApiController extends ApiController {
        }
    
 
-    public function getAll($params = null) {
-        $products = $this->model->getProducts();
+       public function getAll($params = null) {
+    
+        if (isset($_GET['sort'])) {
+            $orderBy = $_GET['sort'];
+        } else {
+            $orderBy = 'id_producto';
+        }
+        
+        if (isset($_GET['order'])) {
+            $orderDir = $_GET['order'];
+        } else {
+            $orderDir = 'ASC';
+        }
+    
+        $products = $this->model->getProducts($orderBy, $orderDir);
         $this->view->response($products, 200);
     }
+    
 
     public function get($params = null) {
         // $params es un array asociativo con los parametros de la ruta
