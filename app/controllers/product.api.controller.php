@@ -9,7 +9,6 @@ class ProductApiController extends ApiController {
         parent::__construct();
           $this->model = new productModel();
        }
-   
 
        public function getAll($params = null) {
     
@@ -24,17 +23,57 @@ class ProductApiController extends ApiController {
         } else {
             $orderDir = 'ASC';
         }
+
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+        } else {
+            $page = 1;
+        }
+        
+        if (isset($_GET['limit'])) {
+            $limit = $_GET['limit'];
+        } else {
+            $limit = 50;
+        }        
+
+        if ($orderBy !== 'id_producto' && $orderBy !== 'nombre' && $orderBy !== 'precio' && $orderBy !== 'id_categoria' && $orderBy !== 'oferta') {
+            $this->view->response("Campo incorrecto", 400);
+            return;
+        }
+
+        if ($orderDir !== 'ASC' && $orderDir !== 'DESC' && $orderDir !== 'asc' && $orderDir !== 'desc') {
+            $this->view->response("Direccion de orden incorrecta", 400);
+            return;
+        }
+
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            if (!is_numeric($page) || $page < 1) {
+                $this->view->response("Número de página inválido", 400);
+                return;
+            }
+        } else {
+            $page = 1;
+        }
+        
+        if (isset($_GET['limit'])) {
+            $limit = $_GET['limit'];
+            if (!is_numeric($limit) || $limit < 1) {
+                $this->view->response("Límite inválido", 400);
+                return;
+            }
+        } else {
+            $limit = 50;
+        }        
     
-        $products = $this->model->getProducts($orderBy, $orderDir);
+        $products = $this->model->getProducts($orderBy, $orderDir, $page, $limit);
         $this->view->response($products, 200);
     }
-    
 
     public function get($params = null) {
-        // $params es un array asociativo con los parametros de la ruta
-        
         $idProduct = $params[':ID'];
         $product = $this->model->getProductByID($idProduct);
+
         if ($product)
             
             $this->view->response($product, 200);
@@ -46,6 +85,7 @@ class ProductApiController extends ApiController {
     public function delete($params = null) {
         $idProduct = $params[':ID'];
         $success = $this->model->deleteProduct($idProduct);
+
         if ($success) {
             $this->view->response("El producto con el id=$idProduct se borro exitosamente", 200);
         }
@@ -96,6 +136,11 @@ class ProductApiController extends ApiController {
             $this->view->response("Producto id=".$id_producto." not found", 404);
     }
 
+    public function getOfertas($params = null) {
+        $products = $this->model->getOfertas();
+        $this->view->response($products, 200);
+    }
+    
     public function getOfertasPorCategoria($params = null) {
         $id_categoria = $params[':ID'];
         $productos = $this->model->getProductosEnOfertaPorCategoria($id_categoria);
@@ -106,5 +151,4 @@ class ProductApiController extends ApiController {
             $this->view->response("No hay productos en oferta para la categoría con id=$id_categoria", 404);
     }
     
-
 }
