@@ -37,8 +37,7 @@ Crea un nuevo producto.
 
 Ejemplo de uso:
 
-POST /api/productos Content-Type: application/json
-
+POST /api/productos
 ```json
 {
     "nombre": "Nuevo producto",
@@ -55,8 +54,7 @@ Actualiza el producto con el ID especificado.
 
 Ejemplo de uso:
 
-PUT /api/productos/1 Content-Type: application/json
-
+PUT /api/productos/1
 ```json
 {
     "nombre": "Poducto actualizado",
