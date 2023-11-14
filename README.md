@@ -73,5 +73,21 @@ Ejemplo de uso:
 
 DELETE /api/productos/1
 
+### GET /ofertas
+
+Obtiene todos los productos en oferta.
+
+Ejemplo de uso:
+
+GET /api/ofertas
+
+### GET /ofertas/:ID
+
+Obtiene todos los productos en oferta que pertenecen a la categoria con el ID especificado.
+
+Ejemplo de uso:
+
+GET /api/ofertas/2
+
 ## Diagrama de Entidad-Relación:
 ![Diagrama de Entidad Relacion](https://github.com/ValentinBulnes/TPE-WEB2-PARTE3/blob/main/Diagrama%20de%20Entidad%20Relacion.png)
