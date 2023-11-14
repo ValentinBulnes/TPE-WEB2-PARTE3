@@ -1,13 +1,16 @@
 <?php
 require_once './app/controllers/api.controller.php';
 require_once './app/models/product.model.php';
+require_once './app/models/categoria.model.php';
 
 class ProductApiController extends ApiController {
-    private $model;
+    private $productModel;
+    private $categoriaModel;
 
     public function __construct() {
         parent::__construct();
-          $this->model = new productModel();
+          $this->productModel = new productModel();
+          $this->categoriaModel = new categoriaModel();
        }
 
        public function getAll($params = null) {
@@ -66,7 +69,7 @@ class ProductApiController extends ApiController {
             return;
         }
     
-        $products = $this->model->getProducts($orderBy, $orderDir, $page, $limit);
+        $products = $this->productModel->getProducts($orderBy, $orderDir, $page, $limit);
 
         if ($categoria !== null) {
             $products = array_filter($products, function($product) use ($categoria) {
@@ -83,7 +86,13 @@ class ProductApiController extends ApiController {
 
     public function get($params = null) {
         $idProduct = $params[':ID'];
-        $product = $this->model->getProductByID($idProduct);
+
+        if (!is_numeric($idProduct) || $idProduct <= 0) {
+            $this->view->response("ID de producto no válido", 400);
+            return;
+        }
+
+        $product = $this->productModel->getProductByID($idProduct);
 
         if ($product)
             
@@ -95,7 +104,13 @@ class ProductApiController extends ApiController {
 
     public function delete($params = null) {
         $idProduct = $params[':ID'];
-        $success = $this->model->deleteProduct($idProduct);
+
+        if (!is_numeric($idProduct) || $idProduct <= 0) {
+            $this->view->response("ID de producto no válido", 400);
+            return;
+        }
+        
+        $success = $this->productModel->deleteProduct($idProduct);
 
         if ($success) {
             $this->view->response("El producto con el id=$idProduct se borro exitosamente", 200);
@@ -119,14 +134,14 @@ class ProductApiController extends ApiController {
         $precio = $body->precio;
         $id_categoria = $body->id_categoria;
     
-        $id = $this->model->insertProduct($nombre, $precio, $id_categoria);
+        $id = $this->productModel->insertProduct($nombre, $precio, $id_categoria);
     
         $this->view->response('La tarea fue insertada con el id='.$id, 201);
     }
     
     public function updateProduct($params = null) {
         $id_producto = $params[':ID'];
-        $product = $this->model->getProductByID($id_producto);
+        $product = $this->productModel->getProductByID($id_producto);
     
         if ($product) {
             $body = $this->getData();
@@ -140,7 +155,7 @@ class ProductApiController extends ApiController {
             $nombre = $body->nombre;
             $precio = $body->precio;
             $id_categoria = $body->id_categoria;
-            $this->model->updateProduct($id_producto, $nombre, $precio, $id_categoria);
+            $this->productModel->updateProduct($id_producto, $nombre, $precio, $id_categoria);
             $this->view->response("Producto id=".$id_producto." actualizado con éxito", 200);
         }
         else 
@@ -148,18 +163,30 @@ class ProductApiController extends ApiController {
     }
 
     public function getOfertas($params = null) {
-        $products = $this->model->getOfertas();
+        $products = $this->productModel->getOfertas();
         $this->view->response($products, 200);
     }
     
     public function getOfertasPorCategoria($params = null) {
         $id_categoria = $params[':ID'];
-        $productos = $this->model->getProductosEnOfertaPorCategoria($id_categoria);
+    
+        if (!is_numeric($id_categoria) || $id_categoria <= 0) {
+            $this->view->response("ID de categoria no válido", 400);
+            return;
+        }
+    
+        if (!$this->categoriaModel->categoriaExiste($id_categoria)) {
+            $this->view->response("La categoría con id=$id_categoria no existe", 404);
+            return;
+        }
+    
+        $productos = $this->productModel->getProductosEnOfertaPorCategoria($id_categoria);
         
         if ($productos)
             $this->view->response($productos, 200);
         else
             $this->view->response("No hay productos en oferta para la categoría con id=$id_categoria", 404);
     }
+    
     
 }
