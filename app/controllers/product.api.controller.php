@@ -46,28 +46,23 @@ class ProductApiController extends ApiController {
             return;
         }
 
-        if (isset($_GET['page'])) {
-            $page = $_GET['page'];
-            if (!is_numeric($page) || $page < 1) {
-                $this->view->response("Número de página inválido", 400);
-                return;
-            }
-        } else {
-            $page = 1;
+        if (!is_numeric($page) || $page < 1) {
+            $this->view->response("Número de página inválido", 400);
+            return;
         }
-        
-        if (isset($_GET['limit'])) {
-            $limit = $_GET['limit'];
-            if (!is_numeric($limit) || $limit < 1) {
-                $this->view->response("Límite inválido", 400);
-                return;
-            }
-        } else {
-            $limit = 50;
-        }        
+    
+        if (!is_numeric($limit) || $limit < 1) {
+            $this->view->response("Límite inválido", 400);
+            return;
+        }    
     
         $products = $this->model->getProducts($orderBy, $orderDir, $page, $limit);
-        $this->view->response($products, 200);
+
+        if (empty($products)) {
+            $this->view->response("No hay más productos para mostrar", 200);
+        } else {
+            $this->view->response($products, 200);
+        }
     }
 
     public function get($params = null) {
