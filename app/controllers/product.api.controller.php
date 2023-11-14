@@ -34,7 +34,12 @@ class ProductApiController extends ApiController {
             $limit = $_GET['limit'];
         } else {
             $limit = 50;
-        }        
+        }
+        
+        $categoria = null;
+        if (isset($_GET['categoria'])) {
+            $categoria = $_GET['categoria'];
+        }
 
         if ($orderBy !== 'id_producto' && $orderBy !== 'nombre' && $orderBy !== 'precio' && $orderBy !== 'id_categoria' && $orderBy !== 'oferta') {
             $this->view->response("Campo incorrecto", 400);
@@ -54,9 +59,20 @@ class ProductApiController extends ApiController {
         if (!is_numeric($limit) || $limit < 1) {
             $this->view->response("Límite inválido", 400);
             return;
-        }    
+        }
+        
+        if ($categoria !== null && $categoria !== 'Procesadores' && $categoria !== 'Motherboards' && $categoria !== 'Placas de video') {
+            $this->view->response("Categoría no válida", 400);
+            return;
+        }
     
         $products = $this->model->getProducts($orderBy, $orderDir, $page, $limit);
+
+        if ($categoria !== null) {
+            $products = array_filter($products, function($product) use ($categoria) {
+                return $product->categoria === $categoria;
+            });
+        }
 
         if (empty($products)) {
             $this->view->response("No hay más productos para mostrar", 200);
