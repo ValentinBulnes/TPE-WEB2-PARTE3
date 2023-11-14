@@ -15,7 +15,7 @@ Parámetros de consulta opcionales:
 - `order`: La dirección del orden. Los valores permitidos son 'ASC', 'DESC', 'asc', 'desc'. Por defecto es 'ASC'.
 - `page`: La página de resultados a mostrar. Por defecto es 1.
 - `limit`: El número de resultados por página. Por defecto es 50.
-- `categoria`: Filtra los productos por esta categoría.
+- `categoria`: Filtra los productos por la categoría elegida.
 
 Ejemplo de uso:
 
@@ -39,7 +39,13 @@ Ejemplo de uso:
 
 POST /api/productos Content-Type: application/json
 
-{ “nombre”: “Nuevo producto”, “precio”: 100, “id_categoria”: 1, “oferta”: 0 }
+```json
+{
+    "nombre": "Nuevo producto",
+    "precio": "100",
+    "id_categoria": "1",
+    "oferta": "0"
+}
 
 
 ### PUT /productos/:ID
