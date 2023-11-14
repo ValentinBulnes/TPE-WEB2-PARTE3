@@ -46,6 +46,7 @@ POST /api/productos Content-Type: application/json
     "id_categoria": "1",
     "oferta": "0"
 }
+```
 
 
 ### PUT /productos/:ID
@@ -56,7 +57,14 @@ Ejemplo de uso:
 
 PUT /api/productos/1 Content-Type: application/json
 
-{ “nombre”: “Producto actualizado”, “precio”: 150, “id_categoria”: 2, “oferta”: 1 }
+```json
+{
+    "nombre": "Poducto actualizado",
+    "precio": "150",
+    "id_categoria": "2",
+    "oferta": "1"
+}
+```
 
 
 ### DELETE /productos/:ID
