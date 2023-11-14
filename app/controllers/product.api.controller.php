@@ -136,7 +136,7 @@ class ProductApiController extends ApiController {
     
         $id = $this->productModel->insertProduct($nombre, $precio, $id_categoria);
     
-        $this->view->response('La tarea fue insertada con el id='.$id, 201);
+        $this->view->response('El producto fue insertado con el id='.$id, 201);
     }
     
     public function updateProduct($params = null) {
