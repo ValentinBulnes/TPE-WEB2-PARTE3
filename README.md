@@ -17,9 +17,13 @@ Parámetros de consulta opcionales:
 - `limit`: El número de resultados por página. Por defecto es 50.
 - `categoria`: Filtra los productos por la categoría elegida.
 
-Ejemplo de uso:
+Ejemplos de uso:
 
-GET /api/productos?sort=precio&order=DESC&page=1&limit=10&categoria=Procesadores
+GET /api/productos?sort=precio&order=DESC
+
+GET /api/productos?page=1&limit=3
+
+GET /api/productos?categoria=Procesadores
 
 
 ### GET /productos/:ID
